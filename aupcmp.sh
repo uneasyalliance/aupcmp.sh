@@ -19,9 +19,6 @@ else
         count2+=1
     done
 
-    #data1="$1_data/eff"
-    #data2="$2_data/eff"
-
     if [ $count1 -ne 1 ]; then
         echo "expected 1 top level subdirectory, got $count1"
     elif [ $count2 -ne 1 ]; then
