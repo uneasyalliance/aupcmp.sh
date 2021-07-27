@@ -1,12 +1,21 @@
 #!/bin/bash
 
+set -u
+
+YNquestion() {
+    read -p "$1 (y/n):" response
+    if [[ $response == 'y' || $response == 'Y' ]]; then
+        return 0
+    fi
+    return 1
+}
+
 if [ "$#" -ne 2 ]; then
     echo "Usage: $0 <project1> <project2>"
     echo "       projects are prefix of .aup file"
 else
     aup1="$1.aup"
     aup2="$2.aup"
-
 
     count1=0
     for dir in "${1}_data"/*/; do
@@ -24,9 +33,13 @@ else
     elif [ $count2 -ne 1 ]; then
         echo "expected 1 top level subdirectory, got $count2"
     else
-        echo "comparing '$aup1' and '$aup2'"
         cmp "$aup1" "$aup2"
-        if [ $? -eq 0 ]; then
+        if [ $? -ne 0 ]; then
+            YNquestion "Show diff"
+            if [[ $? -eq 0 ]]; then
+                diff "$aup1" "$aup2"
+            fi
+        else
             echo "aup files match"
 
             declare -a dirs1 dirs2
@@ -115,3 +128,5 @@ else
         fi
     fi
 fi
+
+exit 0
