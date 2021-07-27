@@ -39,9 +39,14 @@ else
             if [[ $? -eq 0 ]]; then
                 diff "$aup1" "$aup2"
             fi
+            YNquestion "Compare audio data"
+            compare_data=$?
         else
             echo "aup files match"
+            compare_data=0
+        fi
 
+        if [ $compare_data -eq 0 ]; then
             declare -a dirs1 dirs2
             for dir in "${data1}"/*/; do
                 s="${dir:${#data1}+1}"
