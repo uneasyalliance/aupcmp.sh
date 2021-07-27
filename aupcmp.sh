@@ -89,7 +89,7 @@ else
                         if [ $nfiles1 -ne $nfiles2 ]; then
                             echo "$data1/${d1} has $nfiles1 files while $data2/${d2} has $nfiles2"
                         else
-                            echo "number of files match in $data1/${d1}"
+                            echo "number of files match in ${d1}"
 
                             for (( i_file=0; i_file<$nfiles1; i_file++ )); do
                                 path1=${files1[$i_file]}
