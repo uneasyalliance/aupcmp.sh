@@ -17,33 +17,36 @@ else
     aup1="$1.aup"
     aup2="$2.aup"
 
-    count1=0
+    declare -i count1=0
     for dir in "${1}_data"/*/; do
         data1="${dir:0:${#dir}-1}"
         count1+=1
     done
-    count2=0
+    declare -i count2=0
     for dir in "${2}_data"/*/; do
         data2="${dir:0:${#dir}-1}"
         count2+=1
     done
 
     if [ $count1 -ne 1 ]; then
-        echo "expected 1 top level subdirectory, got $count1"
+        echo "expected 1 top level subdirectory in ${1}_data, got $count1"
     elif [ $count2 -ne 1 ]; then
-        echo "expected 1 top level subdirectory, got $count2"
+        echo "expected 1 top level subdirectory in ${2}_data, got $count2"
     else
         cmp "$aup1" "$aup2"
-        if [ $? -ne 0 ]; then
+        # return value 1 is mismatch
+        if [ $? -eq 1 ]; then
             YNquestion "Show diff"
             if [[ $? -eq 0 ]]; then
                 diff "$aup1" "$aup2"
             fi
             YNquestion "Compare audio data"
             compare_data=$?
-        else
+        elif [ $? -eq 0 ]; then
             echo "aup files match"
             compare_data=0
+        else
+            exit 2
         fi
 
         if [ $compare_data -eq 0 ]; then
@@ -65,9 +68,9 @@ else
                 echo "$data1 has $ndirs1 directories while $data2 has $ndirs2"
             else
                 echo "number of data directories match"
-                num_mismatch_dir=0
-                num_mismatch_fname=0
-                num_mismatch_files=0
+                declare -i num_mismatch_dir=0
+                declare -i num_mismatch_fname=0
+                declare -i num_mismatch_files=0
 
                 for (( i=0; i<$ndirs1; i++ )); do
                     d1=${dirs1[$i]}
