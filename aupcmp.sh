@@ -66,9 +66,11 @@ else
 
             if [ $ndirs1 -ne $ndirs2 ]; then
                 echo "$data1 has $ndirs1 directories while $data2 has $ndirs2"
+                exit 3
             else
                 echo "number of data directories match"
                 declare -i num_mismatch_dir=0
+                declare -i num_filecount_diffs=0
                 declare -i num_mismatch_fname=0
                 declare -i num_mismatch_files=0
 
@@ -91,6 +93,7 @@ else
 
                         if [ $nfiles1 -ne $nfiles2 ]; then
                             echo "$data1/${d1} has $nfiles1 files while $data2/${d2} has $nfiles2"
+                            num_filecount_diffs+=1
                         else
                             echo "number of files match in ${d1}"
 
@@ -118,20 +121,23 @@ else
                     echo "num mismatched directory names: $num_mismatch_dir"
                 else
                     echo "all data directory names match"
-                fi
 
-                if [ $num_mismatch_fname -ne 0 ]; then
-                    echo "num mismatched file names: $num_mismatch_fname"
-                else
-                    echo "all au file names match"
-                fi
+                    if [ $num_filecount_diffs -ne 0 ]; then
+                        echo "number of directories with different file counts: $num_filecount_diffs"
+                    else
+                        if [ $num_mismatch_fname -ne 0 ]; then
+                            echo "num mismatched file names: $num_mismatch_fname"
+                        else
+                            echo "all au file names match"
 
-                if [ $num_mismatch_files -ne 0 ]; then
-                    echo "num byte mismatched files: $num_mismatch_files"
-                else
-                    echo "all au files byte match"
+                            if [ $num_mismatch_files -ne 0 ]; then
+                                echo "num byte mismatched files: $num_mismatch_files"
+                            else
+                                echo "all au files byte match"
+                            fi
+                        fi
+                    fi
                 fi
-                
             fi
         fi
     fi
