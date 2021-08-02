@@ -33,12 +33,12 @@ else
     elif [ $count2 -ne 1 ]; then
         echo "expected 1 top level subdirectory in ${2}_data, got $count2"
     else
-        cmp "$aup1" "$aup2"
+        /usr/bin/cmp "$aup1" "$aup2"
         # return value 1 is mismatch
         if [ $? -eq 1 ]; then
             YNquestion "Show diff"
             if [[ $? -eq 0 ]]; then
-                diff "$aup1" "$aup2"
+                /usr/bin/diff "$aup1" "$aup2"
             fi
             YNquestion "Compare audio data"
             compare_data=$?
@@ -103,7 +103,7 @@ else
                                     echo "found mismatched file names '$f1', '$f2'"
                                     num_mismatch_fname+=1
                                 else
-                                    cmp "$path1" "$path2"
+                                    /usr/bin/cmp "$path1" "$path2"
                                     if [ $? -ne 0 ]; then
                                         num_mismatch_files+=1
                                         # TODO mismatched file name list
