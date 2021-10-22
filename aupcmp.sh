@@ -34,19 +34,20 @@ else
         echo "expected 1 top level subdirectory in ${2}_data, got $count2"
     else
         /usr/bin/cmp "$aup1" "$aup2"
+        aup_cmp_result=$?
         # return value 1 is mismatch
-        if [ $? -eq 1 ]; then
+        if [ $aup_cmp_result -eq 1 ]; then
             YNquestion "Show diff"
             if [[ $? -eq 0 ]]; then
                 /usr/bin/diff "$aup1" "$aup2"
             fi
             YNquestion "Compare audio data"
             compare_data=$?
-        elif [ $? -eq 0 ]; then
+        elif [ $aup_cmp_result -eq 0 ]; then
             echo "aup files match"
             compare_data=0
         else
-            exit 2
+            exit "$aup_cmp_result"
         fi
 
         if [ $compare_data -eq 0 ]; then
